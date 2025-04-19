@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 3
   tags:
   - Anchor
+  - RoomDoor
+  - LargeRoomDoor
+  - IntermediateRoom
+  - Connector
+  - ObjectiveRoom
   layers:
   - Default
   - TransparentFX

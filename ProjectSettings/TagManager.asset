@@ -10,6 +10,7 @@ TagManager:
   - IntermediateRoom
   - Connector
   - ObjectiveRoom
+  - Spawn
   layers:
   - Default
   - TransparentFX

@@ -15,6 +15,6 @@ MonoBehaviour:
   IntermediateRooms:
   - {fileID: 1698844497695030210, guid: 55efdade1952d0b41aca6c177705062b, type: 3}
   Connector:
-  - {fileID: 0}
+  - {fileID: 2716938000990228548, guid: 812bd23942da6bd4e8a955cfc8d8404c, type: 3}
   Objective: {fileID: 0}
-  Spawn: {fileID: 0}
+  Spawn: {fileID: 984382450761257928, guid: dfda25d5be2b8df43928ca5f71e33d16, type: 3}

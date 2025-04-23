@@ -11,10 +11,13 @@ public class Room : MonoBehaviour
         Hallway
     }
 
-    private Bounds combinedBounds;
+    private Bounds _combinedBounds;
 
     [SerializeField] 
-    List<ConnectorStatus> connectors;
+    List<ConnectorStatus> _connectors;
+
+    [SerializeField] 
+    RoomType _roomType;
 
     void Awake()
     {
@@ -71,26 +74,28 @@ public class Room : MonoBehaviour
         Collider[] colliders = GetComponentsInChildren<Collider>();
         if (colliders.Length == 0)
         {
-            combinedBounds = new Bounds(transform.position, Vector3.zero);
+            _combinedBounds = new Bounds(transform.position, Vector3.zero);
             return;
         }
 
-        combinedBounds = colliders[0].bounds;
+        _combinedBounds = colliders[0].bounds;
         for (int i = 1; i < colliders.Length; i++)
         {
-            combinedBounds.Encapsulate(colliders[i].bounds);
+            _combinedBounds.Encapsulate(colliders[i].bounds);
         }
     }
 
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
-        Gizmos.DrawWireCube(combinedBounds.center, combinedBounds.size);
+        Gizmos.DrawWireCube(_combinedBounds.center, _combinedBounds.size);
     }
 
     public List<ConnectorStatus> GetConnectors() { 
     
-        return connectors;
+        return _connectors;
     
     }
+
+    public RoomType GetRoomType() { return _roomType; }
 }

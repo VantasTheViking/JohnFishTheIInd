@@ -1765,6 +1765,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 478680450126981067}
+  - component: {fileID: 1414191692648611325}
   m_Layer: 0
   m_Name: Hallway
   m_TagString: Connector
@@ -1789,6 +1790,23 @@ Transform:
   - {fileID: 6521814795399410036}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1414191692648611325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2716938000990228548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a96c568dad88b74d9812131a50f42dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  connectors:
+  - connector: {fileID: 2581858124101162832}
+    isConnected: 0
+  - connector: {fileID: 5426704463926205881}
+    isConnected: 0
 --- !u!1 &2733591236809744270
 GameObject:
   m_ObjectHideFlags: 0

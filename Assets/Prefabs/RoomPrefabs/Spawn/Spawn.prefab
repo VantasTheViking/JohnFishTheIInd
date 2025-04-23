@@ -361,6 +361,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4198395177725277606}
+  - component: {fileID: 4923266843768303891}
+  - component: {fileID: 6373085544439784271}
   m_Layer: 0
   m_Name: Spawn
   m_TagString: Untagged
@@ -385,6 +387,37 @@ Transform:
   - {fileID: 8333992515252206127}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4923266843768303891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984382450761257928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a96c568dad88b74d9812131a50f42dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  connectors:
+  - connector: {fileID: 8896248167814957714}
+    isConnected: 0
+--- !u!114 &6373085544439784271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984382450761257928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 806de1e0d88f9ad40b32f276a8c09c31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _levelSize: 1
+  _mapType: {fileID: 0}
+  rooms: []
+  spawnRoom: {fileID: 0}
 --- !u!1 &1607921367346275139
 GameObject:
   m_ObjectHideFlags: 0

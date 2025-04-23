@@ -2151,6 +2151,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a96c568dad88b74d9812131a50f42dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  connectors:
+  - connector: {fileID: 435716607500775560}
+    isConnected: 0
+  - connector: {fileID: 3081599936299126568}
+    isConnected: 0
+  - connector: {fileID: 5590366277387553612}
+    isConnected: 0
+  - connector: {fileID: 7337285164442590258}
+    isConnected: 0
 --- !u!1 &1800708956655354741
 GameObject:
   m_ObjectHideFlags: 0

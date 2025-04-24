@@ -399,9 +399,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a96c568dad88b74d9812131a50f42dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  connectors:
+  _connectors:
   - connector: {fileID: 8896248167814957714}
     isConnected: 0
+  _roomType: 0
 --- !u!114 &6373085544439784271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -418,6 +419,7 @@ MonoBehaviour:
   _mapType: {fileID: 0}
   rooms: []
   startingRoom: {fileID: 0}
+  generationSize: 0
 --- !u!1 &1607921367346275139
 GameObject:
   m_ObjectHideFlags: 0
@@ -2966,7 +2968,6 @@ GameObject:
   - component: {fileID: 8049589494884632854}
   - component: {fileID: 2300017374068568091}
   - component: {fileID: 6843179144668639709}
-  - component: {fileID: 2384602603703465726}
   m_Layer: 0
   m_Name: Cube (1)
   m_TagString: RoomDoor
@@ -3278,26 +3279,4 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8896248167814957714}
-  m_Mesh: {fileID: 0}
---- !u!64 &2384602603703465726
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8896248167814957714}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
   m_Mesh: {fileID: 0}

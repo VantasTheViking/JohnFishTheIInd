@@ -2,7 +2,6 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-
 public class Room : MonoBehaviour
 {
     public enum RoomType
@@ -19,6 +18,11 @@ public class Room : MonoBehaviour
     [SerializeField] 
     RoomType _roomType;
 
+    public bool isSpawnRoom;
+
+    Vector3 a;
+    Vector3 b;
+    Vector3 c;
     void Awake()
     {
 
@@ -30,15 +34,40 @@ public class Room : MonoBehaviour
 
     private void Start()
     {
-        
+        if (!CheckIfConnectedToMap() && !isSpawnRoom)
+        {
+            Destroy(gameObject);
+        }
     }
 
-    public bool CheckSpaceForRoomSpawning(GameObject roomPrefab, Vector3 spawnPosition, Quaternion spawnRotation)
+
+    bool CheckIfConnectedToMap()
+    {
+        bool connected = false;
+        foreach (ConnectorStatus connector in _connectors)
+        {
+            if (connector.isConnected)
+            {
+                connected = true;
+            }
+
+        }
+        if(connected) { return true; } else { return false; }
+    }
+    public bool CheckSpaceForRoomSpawning(GameObject roomPrefab, Vector3 spawnPosition, Vector3 offset, Vector3 connectorPosition, int spawnRotation)
     {
 
         Bounds allPrefabBounds = GetRoomBounds(roomPrefab);
         Vector3 halfExtents = allPrefabBounds.extents;
-        Collider[] hits = Physics.OverlapBox(spawnPosition + allPrefabBounds.center, halfExtents, spawnRotation);
+        Vector3 rotatedCenter = Quaternion.Euler(0, 90 * spawnRotation, 0) * allPrefabBounds.center;
+        Vector3 worldCenter = spawnPosition + rotatedCenter;
+
+        Collider[] hits = Physics.OverlapBox(worldCenter, halfExtents, Quaternion.Euler(0, 90 * spawnRotation, 0));
+
+
+        ExtDebug.DrawBox(worldCenter, halfExtents, Quaternion.Euler(0,90* spawnRotation, 0), Color.red);
+        
+
 
         if (hits.Length == 0) { return true; } else { return false; }
 

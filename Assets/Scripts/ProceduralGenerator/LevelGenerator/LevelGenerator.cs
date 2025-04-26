@@ -23,19 +23,30 @@ public class LevelGenerator : MonoBehaviour
 
     [SerializeField]
     int generationSize;
+
+
+    bool allConnectorsFilled = false;
+    int currentSize = 0;
+
     private void Start()
     {
         startingRoom = GetComponent<Room>();
         rooms.Add(startingRoom);
+        startingRoom.isSpawnRoom = true;
 
 
-        GenerateLevel();
-        
+        validateMapData();
+
+
 
 
     }
 
-
+    private void Update()
+    {
+        GenerateLevel();
+    }
+    /*
     public void GenerateLevel()
     {
 
@@ -100,22 +111,88 @@ public class LevelGenerator : MonoBehaviour
             //The rotation of where they will be connecting
             startingRoom.GetConnectors()[0].connector.transform.rotation * Quaternion.Euler(0, 270, 0)
         );
-        */
+        
 
     }
+    */
 
-    void FillRoomConnections(Room room, ConnectorStatus connector)
+    public void GenerateLevel()
+    {
+
+
+
+        //Loop through all the rooms to see if all connectors are filled
+        
+        if (!allConnectorsFilled && currentSize <= generationSize)
+        {
+            //Debug.Log("AGAIN");
+            currentSize++;
+            allConnectorsFilled = true;
+
+            List<Room> roomsToCheck = new List<Room>(rooms);
+            //Debug.Log("Room Count:" + rooms.Count);
+            foreach (Room room in roomsToCheck)
+            {
+                //Debug.Log("A");
+
+
+                foreach (ConnectorStatus connectorStatus in room.GetConnectors())
+                {
+
+                    //Debug.Log("B");
+                    //If connector not filled
+                    if (!connectorStatus.isConnected)
+                    {
+                        //Debug.Log("C");
+                        allConnectorsFilled = false;
+
+                        FillRoomConnections(room, connectorStatus);
+
+
+                    }
+
+
+                }
+            }
+        } else { GetComponent<LevelGenerator>().enabled = false; }
+
+
+        //If connector not filled
+        //Create list of possible rooms to connect to
+        //Select Random Connector on Room
+        //Check all 4 rotations to see if any won't cause an overlap
+        //If can't spawn at all select another random connector
+        //If no connectors can fill select another random room minus the old
+        //If no room can fill it close it up and set the connector as connected
+
+
+
+        
+        
+
+    }
+    
+
+        void FillRoomConnections(Room room, ConnectorStatus connector)
     {
         //Create list of possible rooms to connect to
         List<GameObject> possibleRooms = new List<GameObject>();
         if (room.GetRoomType() == Room.RoomType.Hallway)
         {
-            //Debug.Log("Intermediate");
-            possibleRooms = new List<GameObject>(_mapType.IntermediateRooms);
+            //Chance for hallways to be longer
+            if(UnityEngine.Random.Range(0,1) == 0)
+            {
+
+                possibleRooms = new List<GameObject>(_mapType.IntermediateRooms);
+            } else
+            {
+
+                possibleRooms = new List<GameObject>(_mapType.Connector);
+            }
         }
         else if(room.GetRoomType() == Room.RoomType.Intermediate)
         {
-            //Debug.Log("Connector");
+
             possibleRooms = new List<GameObject>(_mapType.Connector);
         }
 
@@ -130,53 +207,57 @@ public class LevelGenerator : MonoBehaviour
             foreach (ConnectorStatus selectedRoomConnector in selectedRoomConnectors)
             {
                 
-                    //Debug.Log($"{ selectedRoom.name}, {room.gameObject.name}, {connector.connector.gameObject.name}");
-                    //Try fitting through all the possible rotations
-                    for (int rotationTry = 0; rotationTry < 4; rotationTry++)
+                //Debug.Log($"{ selectedRoom.name}, {room.gameObject.name}, {connector.connector.gameObject.name}");
+                //Try fitting through all the possible rotations
+                for (int rotationTry = 0; rotationTry < 4; rotationTry++)
+                {
+                    if (!roomSpawned || true)
                     {
-                        if (!roomSpawned)
-                        {
 
-                            //Debug.Log("RotationsTry");
-                            //Position of the connector of the selected room when rotated
-                            Vector3 pos = NewPositionAfterYRotated(selectedRoomConnector.connector.transform.position, selectedRoom.transform.position, rotationTry * 90);
-                            
-                            if (room.CheckSpaceForRoomSpawning(
+                        //Debug.Log("RotationsTry");
+                        //Position of the connector of the selected room when rotated
+                        Vector3 pos = NewPositionAfterYRotated(selectedRoomConnector.connector.transform.position, rotationTry * 90);
+                        
+                        
+                        if (room.CheckSpaceForRoomSpawning(
                                 selectedRoom,
                                 connector.connector.transform.position - pos,
-                                connector.connector.transform.rotation * Quaternion.Euler(0, rotationTry * 90, 0)
+                                pos,
+                                selectedRoomConnector.connector.transform.position,
+                                rotationTry
                                 ))
-                            {
+                        {
+                            Debug.Break();
+                            roomSpawned = true;
+                            Debug.Log("SPAWN");
+                            GameObject newRoom = startingRoom.SpawnRoom(
+                                //The Type of Room
+                                selectedRoom,
+                                //Where they will be connecting
+                                connector.connector.transform.position - pos,
+                                //The rotation of where they will be connecting
+                                connector.connector.transform.rotation = Quaternion.Euler(0, rotationTry * 90, 0)
+                            );
+                            //Add new room to the list of all rooms
+                            rooms.Add(newRoom.GetComponent<Room>());
 
-                                roomSpawned = true;
-                                GameObject newRoom = startingRoom.SpawnRoom(
-                                    //The Type of Room
-                                    selectedRoom,
-                                    //Where they will be connecting
-                                    connector.connector.transform.position - pos,
-                                    //The rotation of where they will be connecting
-                                    connector.connector.transform.rotation * Quaternion.Euler(0, rotationTry * 90, 0)
-                                );
-                                //Add new room to the list of all rooms
-                                rooms.Add(newRoom.GetComponent<Room>());
+                            Room newRoomComponent = newRoom.GetComponent<Room>();
 
-                                Room newRoomComponent = newRoom.GetComponent<Room>();
+                            // Find the matching connector in the new room
+                            List<ConnectorStatus> newRoomConnectors = newRoomComponent.GetConnectors();
+                            ConnectorStatus newConnector = FindClosestConnector(newRoomConnectors, connector.connector.transform.position);
 
-                                // Find the matching connector in the new room
-                                List<ConnectorStatus> newRoomConnectors = newRoomComponent.GetConnectors();
-                                ConnectorStatus newConnector = FindClosestConnector(newRoomConnectors, connector.connector.transform.position);
-
-                                // Set actual spawned connectors to connected
-                                connector.isConnected = true;
-                                //Debug.Log("newConnector:" + newConnector.connector.name);
-                                newConnector.isConnected = true;
-                                Debug.Log(selectedRoomConnector.connector.transform.position);
-
-                        }
-                            else { Debug.Log("CantSpawn"); }
+                            // Set actual spawned connectors to connected
+                            connector.isConnected = true;
+                            //Debug.Log("newConnector:" + newConnector.connector.name);
+                            newConnector.isConnected = true;
+                            Debug.Log(selectedRoomConnector.connector.transform.position);
 
                         }
+                        else { Debug.Log("CantSpawn"); }
+
                     }
+                }
                 
             }
             
@@ -279,14 +360,16 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    Vector3 NewPositionAfterYRotated( Vector3 position, Vector3 pivotPoint, float deltaAngle)
+    Vector3 NewPositionAfterYRotated(Vector3 position,float deltaAngle)
     {
-        Vector3 dir = position - pivotPoint;
+        
         float angleInRadians = deltaAngle * Mathf.Deg2Rad;
-        float xNew = dir.x * Mathf.Cos(angleInRadians) + dir.z * Mathf.Sin(angleInRadians);
-        float yNew = dir.y;
-        float zNew = -dir.x * Mathf.Sin(angleInRadians) + dir.z * Mathf.Cos(angleInRadians);
+        float xNew = position.x * Mathf.Cos(angleInRadians) + position.z * Mathf.Sin(angleInRadians);
+        float yNew = position.y;
+        float zNew = -position.x * Mathf.Sin(angleInRadians) + position.z * Mathf.Cos(angleInRadians);
 
         return new Vector3( xNew, yNew, zNew );
+
+
     }
 }

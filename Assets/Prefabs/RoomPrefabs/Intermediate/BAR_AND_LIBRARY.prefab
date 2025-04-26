@@ -2138,6 +2138,7 @@ MonoBehaviour:
   - connector: {fileID: 7337285164442590258}
     isConnected: 0
   _roomType: 0
+  isSpawnRoom: 0
 --- !u!1 &1800708956655354741
 GameObject:
   m_ObjectHideFlags: 0

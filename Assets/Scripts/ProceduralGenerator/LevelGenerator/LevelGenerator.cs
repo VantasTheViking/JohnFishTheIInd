@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 
@@ -154,7 +155,11 @@ public class LevelGenerator : MonoBehaviour
 
                 }
             }
-        } else { GetComponent<LevelGenerator>().enabled = false; }
+        } else {
+            CreateConnectorsPrefabs();
+            GetComponent<LevelGenerator>().enabled = false; 
+        
+        }
 
 
         //If connector not filled
@@ -171,9 +176,25 @@ public class LevelGenerator : MonoBehaviour
         
 
     }
-    
 
-        void FillRoomConnections(Room room, ConnectorStatus connector)
+    private void CreateConnectorsPrefabs()
+    {
+        foreach(Room room in rooms)
+        {
+            foreach (ConnectorStatus connector in room.GetConnectors())
+            {
+                if (connector.isConnected)
+                {
+                    GameObject newConnector = Instantiate(_mapType.Connector, connector.connector.transform.position, connector.connector.transform.rotation);
+                    newConnector.transform.rotation *= Quaternion.Euler(0, 90, 0);
+                    newConnector.transform.position += new Vector3(0,3.5f,0);
+                }
+                
+            }
+        }
+    }
+
+    void FillRoomConnections(Room room, ConnectorStatus connector)
     {
         //Create list of possible rooms to connect to
         List<GameObject> possibleRooms = new List<GameObject>();
@@ -187,13 +208,13 @@ public class LevelGenerator : MonoBehaviour
             } else
             {
 
-                possibleRooms = new List<GameObject>(_mapType.Connector);
+                possibleRooms = new List<GameObject>(_mapType.Hallway);
             }
         }
         else if(room.GetRoomType() == Room.RoomType.Intermediate)
         {
 
-            possibleRooms = new List<GameObject>(_mapType.Connector);
+            possibleRooms = new List<GameObject>(_mapType.Hallway);
         }
 
         //Iterate through all the possible rooms randomly
@@ -202,7 +223,9 @@ public class LevelGenerator : MonoBehaviour
         {
             GameObject selectedRoom = possibleRooms[UnityEngine.Random.Range(0, possibleRooms.Count)];
             List<ConnectorStatus> selectedRoomConnectors = selectedRoom.GetComponent<Room>().GetConnectors();
-            
+
+            selectedRoomConnectors = selectedRoomConnectors.OrderBy(i => Guid.NewGuid()).ToList();
+
             //Foreach connector in the selected room
             foreach (ConnectorStatus selectedRoomConnector in selectedRoomConnectors)
             {
@@ -236,7 +259,7 @@ public class LevelGenerator : MonoBehaviour
                                 //Where they will be connecting
                                 connector.connector.transform.position - pos,
                                 //The rotation of where they will be connecting
-                                connector.connector.transform.rotation = Quaternion.Euler(0, rotationTry * 90, 0)
+                                Quaternion.Euler(0, rotationTry * 90, 0)
                             );
                             //Add new room to the list of all rooms
                             rooms.Add(newRoom.GetComponent<Room>());
@@ -275,7 +298,7 @@ public class LevelGenerator : MonoBehaviour
         if (!roomSpawned)
         {
             Debug.Log("NoPossible");
-            connector.isConnected = true;
+            //connector.isConnected = true;
         }
 
 
@@ -341,7 +364,7 @@ public class LevelGenerator : MonoBehaviour
             }
         }
 
-        foreach (GameObject room in _mapType.Connector)
+        foreach (GameObject room in _mapType.Hallway)
         {
             if (room.GetComponent<Room>() == null)
             {
@@ -372,4 +395,5 @@ public class LevelGenerator : MonoBehaviour
 
 
     }
+
 }

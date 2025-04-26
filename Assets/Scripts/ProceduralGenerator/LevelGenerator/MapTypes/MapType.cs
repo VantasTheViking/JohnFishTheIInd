@@ -6,7 +6,8 @@ using UnityEngine;
 public class MapType : ScriptableObject
 {
     public List<GameObject> IntermediateRooms;
-    public List<GameObject> Connector;
+    public List<GameObject> Hallway;
     public GameObject Objective;
     public GameObject Spawn;
+    public GameObject Connector;
 }
